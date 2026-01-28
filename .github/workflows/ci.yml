@@ -1,4 +1,4 @@
-name: Frontend CI1
+name: Frontend CI/CD
 
 on:
     push:
@@ -18,3 +18,20 @@ jobs:
 
         - name: Push to Docker Hub
           run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend
+
+    deploy:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        - name: Deploy to server
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USERNAME }}
+            password: ${{ secrets.SSH_PASSWORD }}
+            port: ${{ secrets.SSH_PORT }}
+            script: |
+              docker pull ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend
+              cd ~/app
+              docker-compose down
+              docker-compose up -d
