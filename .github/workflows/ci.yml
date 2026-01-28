@@ -1,31 +1,27 @@
-name: CI
+name: Frontend CI
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+      branches: [main]
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+    build-and-test:
+      runs-on: ubuntu-latest
 
-    steps:
-      # Code aus dem Repository auschecken
-      - name: Checkout code
-        uses: actions/checkout@v4
+      steps:
+        - uses: actions/checkout@v4
 
-      # Node.js installieren (falls notwendig, z.B. für Docker-Tests ohne Node im Image)
-      # Optional, falls dein Docker-Image Node already enthält
-      #- name: Set up Node.js
-      #  uses: actions/setup-node@v3
-      #  with:
-      #    node-version: '18'
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '20'
+            cache: 'yarn'
 
-      # Docker Image bauen
-      - name: Build Docker image
-        run: docker build -t multi-user-frontend .
+        - name: Install dependencies
+          run: yarn install
 
-      # Tests innerhalb des Docker Containers ausführen
-      - name: Run tests
-        run: docker run --rm multi-user-frontend yarn test
+        - name: Run tests
+          run: yarn test --run
+
+        - name: Build Docker image
+          run: docker build -t multi-user-frontend .
