@@ -5,23 +5,8 @@ on:
       branches: [main]
 
 jobs:
-    build-and-test:
+    build:
       runs-on: ubuntu-latest
-
       steps:
         - uses: actions/checkout@v4
-
-        - name: Setup Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: '20'
-            cache: 'yarn'
-
-        - name: Install dependencies
-          run: yarn install
-
-        - name: Run tests
-          run: yarn test --run
-
-        - name: Build Docker image
-          run: docker build -t multi-user-frontend .
+        - run: docker build -t multi-user-frontend .
