@@ -1,0 +1,21 @@
+name: Frontend CI
+
+  on:
+    push:
+      branches: [main]
+    pull_request:
+      branches: [main]
+
+  jobs:
+    build-and-test:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Build Docker image
+          run: docker build -t multi-user-frontend .
+
+        - name: Run tests
+          run: docker run multi-user-frontend yarn test --run
