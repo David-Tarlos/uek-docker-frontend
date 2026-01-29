@@ -1,4 +1,4 @@
-name: Frontend CI/CD1
+name: Frontend CI/CD
 on:
     push:
       branches: [main]
@@ -29,4 +29,4 @@ jobs:
               docker pull ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend:prod
               cd ~/prod
               docker-compose down
-              docker-compose up -d
+              docker compose up -d --force-recreate --no-deps frontend
