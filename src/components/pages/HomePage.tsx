@@ -71,7 +71,7 @@ export default function HomePage() {
                             letterSpacing: '-0.02em',
                         }}
                     >
-                        OurSpace
+                        OURSpace
                     </Typography>
 
                     {/* Untertitel */}
