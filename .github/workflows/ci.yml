@@ -10,9 +10,9 @@ jobs:
         - name: Login to Docker Hub
           run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         - name: Build image
-          run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend .
+          run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend:prod .
         - name: Push to Docker Hub
-          run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend
+          run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend:prod
     
     deploy:
       needs: build
@@ -26,7 +26,7 @@ jobs:
             password: ${{ secrets.SSH_PASSWORD }}
             port: ${{ secrets.SSH_PORT }}
             script: |
-              docker pull ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend
-              cd ~/app
+              docker pull ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend:prod
+              cd ~/prod
               docker-compose down
               docker-compose up -d
