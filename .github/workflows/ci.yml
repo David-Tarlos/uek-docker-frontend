@@ -1,7 +1,7 @@
-name: Frontend CI/CD
+name: Frontend CI/CD Dev
 on:
     push:
-      branches: [main]
+      branches: [develop]
 jobs:
     build:
       runs-on: ubuntu-latest
@@ -10,9 +10,9 @@ jobs:
         - name: Login to Docker Hub
           run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         - name: Build image
-          run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend .
+          run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend:dev .
         - name: Push to Docker Hub
-          run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend
+          run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend:dev
     
     deploy:
       needs: build
@@ -26,7 +26,7 @@ jobs:
             password: ${{ secrets.SSH_PASSWORD }}
             port: ${{ secrets.SSH_PORT }}
             script: |
-              docker pull ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend
-              cd ~/app
-              docker-compose down
-              docker-compose up -d
+              docker pull ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend:dev
+              cd ~/dev
+              docker compose down --remove-orphans
+              docker compose up -d --force-recreate david-frontend-dev
