@@ -28,5 +28,5 @@ jobs:
             script: |
               docker pull ${{ secrets.DOCKER_USERNAME }}/multi-user-frontend:prod
               cd ~/prod
-              docker-compose down
-              docker compose up -d --force-recreate --no-deps frontend
+              docker compose down
+              docker compose up -d --force-recreate --no-deps david-frontend-prod
